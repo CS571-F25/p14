@@ -20,7 +20,7 @@ function NaviBar(props) {
         <div>
             <Navbar bg="white" variant="light" expand="md" fixed="top">
                 <Container>
-                    <Navbar.Brand> {/*TODO*/} </Navbar.Brand>
+                    <Navbar.Brand as={Link} to="/" style={logoStyle}>Riffrate</Navbar.Brand>
 
                     <Navbar.Toggle aria-controls="main-nav" />
 
@@ -43,6 +43,12 @@ function NaviBar(props) {
         </div>
     )
 }
+
+const logoStyle = {
+    fontWeight: "bold",
+    fontSize: "50px",
+    color: "#DD0426",
+};
 
 const linkStyle = {
     fontSize: "24px",
