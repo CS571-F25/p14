@@ -1,14 +1,15 @@
-
-// src/firebase.js
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, serverTimestamp } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 
-/**
- * Uses environment variables if present, otherwise you can paste your config object directly.
- * For Create React App use REACT_APP_... variables.
- */
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyDzRx2G7EVUCtxKQkGvNmc2M27zIi_-fww",
   authDomain: "riffrate-70f6a.firebaseapp.com",
@@ -19,15 +20,10 @@ const firebaseConfig = {
   measurementId: "G-KJ60Q034EX"
 };
 
-// initialize app (singleton)
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
 
-// exports you'll use throughout the app
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+export { app, analytics, auth };
 
-/**
- * Helper to get a Firestore server timestamp for writes:
- * Use: created: serverTimestamp()
- */
-export const getServerTimestamp = serverTimestamp;
