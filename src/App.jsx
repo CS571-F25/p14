@@ -9,6 +9,8 @@ import UserLogin from './components/auth/UserLogin'
 import UserRegister from './components/auth/UserRegister'
 import NaviBar from './NaviBar'
 
+//troubleshooting, delete this comment later
+
 function App() {
   return <HashRouter>
     <NaviBar />
