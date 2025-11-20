@@ -1,16 +1,18 @@
-// src/ReviewByBand.jsx
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Container, Form, Row, Col } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import MessageCard from "./MessageCard";
+import { useNavigate } from "react-router-dom";
 
 import {
   getRecentReviews,
   getReviewsForBand,
-  deleteReview
+  deleteReview,
 } from "../../firebase/firebaseHelper";
 
 export default function ReviewByBand() {
+  const navigate = useNavigate();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(null);
@@ -23,7 +25,8 @@ export default function ReviewByBand() {
   useEffect(() => {
     async function load() {
       const recent = await getRecentReviews(10);
-      setReviews(recent);
+      // filter for band reviews (documents that have bandName)
+      setReviews(recent.filter((r) => r.bandName));
     }
     load();
   }, []);
@@ -38,8 +41,7 @@ export default function ReviewByBand() {
     // calculate average rating
     if (results.length > 0) {
       const avg =
-        results.reduce((acc, r) => acc + (r.rating || 0), 0) /
-        results.length;
+        results.reduce((acc, r) => acc + (r.rating || 0), 0) / results.length;
       setAvgRating(avg.toFixed(2));
     } else {
       setAvgRating(null);
@@ -51,7 +53,7 @@ export default function ReviewByBand() {
   // Handle deleting a review
   const handleDelete = async (id) => {
     await deleteReview(id);
-    setReviews(reviews.filter((r) => r.id !== id));
+    setReviews((prev) => prev.filter((r) => r.id !== id));
   };
 
   // Pagination logic
@@ -63,6 +65,15 @@ export default function ReviewByBand() {
   return (
     <div style={{ padding: "1rem" }}>
       <h1>Band Reviews</h1>
+
+      <Button
+        variant="success"
+        onClick={() => navigate("/ReviewPage")}
+        className="mb-3"
+      >
+        Write a Review
+      </Button>
+
       <p>Search for bands below!</p>
       <hr />
 
