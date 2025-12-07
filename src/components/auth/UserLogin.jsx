@@ -1,5 +1,6 @@
 import { Form, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
+import {currentUser} from '../components/context//index.jsx';
 
 /* TODO
 - username input
@@ -12,7 +13,7 @@ import { Link, useNavigate } from 'react-router';
 
 export default function UserLogin (props) {
 
-    const username = ""; //FIXME
+    const username = currentUser; //FIXME
     const password = ""; //FIXME
 
     const navigate = useNavigate();

@@ -12,6 +12,7 @@ const AuthContext = React.createContext(null);
 
 export const useAuth = () => useContext(AuthContext);
 
+
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
