@@ -109,7 +109,9 @@ export default function ReviewByBand() {
                 content={r.content}
                 poster={r.poster}
                 created={r.created}
-                delete={() => handleDelete(r.id)}
+                rating={r.rating}
+                userUid={r.userUid}
+                onDelete={() => handleDelete(r.id)}
               />
             </Col>
           ))}
