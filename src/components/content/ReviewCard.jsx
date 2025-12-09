@@ -37,7 +37,7 @@ function ReviewCard(props) {
   return (
     <>
       <Card style={{ margin: "0.5rem", padding: "0.5rem" }}>
-        <h2>{props.bandName || props.venueName}</h2>
+        <h1>{props.bandName || props.venueName}</h1>
         <sub>
           Posted on {dt.toLocaleDateString()} at {dt.toLocaleTimeString()}
         </sub>
