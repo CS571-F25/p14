@@ -134,6 +134,7 @@ export default function ReviewByBand() {
 
       <hr />
 
+      
       {/* ⭐ SEARCH */}
       <Form className="mb-4" onSubmit={(e) => e.preventDefault()}>
         <Form.Label>Band Name</Form.Label>
@@ -148,6 +149,7 @@ export default function ReviewByBand() {
             marginTop: "0.5rem"
           }}
         >
+          {/* Search Input */}
           <Form.Control
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -155,15 +157,24 @@ export default function ReviewByBand() {
             style={{ maxWidth: "300px" }}
           />
 
+          {/* Search Button */}
           <Button variant="primary" onClick={handleSearch}>
             Search
           </Button>
 
+          {/* Clear Button */}
           <Button variant="secondary" onClick={handleClear}>
             Clear
           </Button>
 
+          {/* Hidden label for accessibility */}
+          <Form.Label htmlFor="bandSortSelect" className="visually-hidden">
+            Sort By
+          </Form.Label>
+
+          {/* Sort Dropdown */}
           <Form.Select
+            id="bandSortSelect"
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
             style={{ maxWidth: "180px" }}
@@ -177,6 +188,7 @@ export default function ReviewByBand() {
           </Form.Select>
         </div>
       </Form>
+
 
 
       {/* ⭐ AVERAGE RATING */}

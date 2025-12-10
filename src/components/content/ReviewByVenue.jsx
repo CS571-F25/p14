@@ -147,7 +147,7 @@ export default function ReviewByVenue() {
             gap: "10px",
             alignItems: "center",
             flexWrap: "wrap",
-            marginTop: "0.5rem"
+            marginTop: "0.5rem",
           }}
         >
           <Form.Control
@@ -165,7 +165,13 @@ export default function ReviewByVenue() {
             Clear
           </Button>
 
+          {/* Hidden label for accessibility for the sort dropdown */}
+          <Form.Label htmlFor="venueSortSelect" className="visually-hidden">
+            Sort By
+          </Form.Label>
+
           <Form.Select
+            id="venueSortSelect"
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
             style={{ maxWidth: "180px" }}
@@ -180,7 +186,6 @@ export default function ReviewByVenue() {
         </div>
       </Form>
 
-
       {/* ⭐ AVERAGE RATING DISPLAY */}
       {searchPerformed && (
         <div style={{ textAlign: "center", marginBottom: "1rem" }}>
@@ -193,7 +198,8 @@ export default function ReviewByVenue() {
                 <>
                   {"★".repeat(Math.round(averageRating))}
                   {"☆".repeat(5 - Math.round(averageRating))}
-                  {" "}({averageRating.toFixed(1)})
+                  {" "}
+                  ({averageRating.toFixed(1)})
                 </>
               )}
             </h5>

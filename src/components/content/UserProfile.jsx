@@ -86,7 +86,7 @@ export default function UserProfile() {
 
       {/* User Info Card */}
       <Card className="mb-4" style={{ padding: "1rem" }}>
-        <h3>👤 {currentUser?.displayName || currentUser?.email || "User"}</h3>
+        <h2>👤 {currentUser?.displayName || currentUser?.email || "User"}</h2>
         <p className="text-muted">{currentUser?.email}</p>
         
         <Row className="mt-3">
