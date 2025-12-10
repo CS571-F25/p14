@@ -1,7 +1,6 @@
-
-import React, { useState } from "react";
-import { Button, Form, ToggleButton, ButtonGroup, Alert } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Button, Form, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router";
 import { useAuth } from "../auth/AuthContext";
 
 import {
@@ -21,6 +20,7 @@ export default function ReviewPage() {
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
   const [rating, setRating] = useState(0);
+
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
@@ -42,7 +42,7 @@ export default function ReviewPage() {
       <div className="page-container" style={{ textAlign: "center" }}>
         <Alert variant="warning">
           <h4>Please log in to write a review</h4>
-          <Button type="button" variant="primary" onClick={() => navigate("/UserLogin")}>
+          <Button variant="primary" onClick={() => navigate("/UserLogin")}>
             Go to Login
           </Button>
         </Alert>
@@ -77,12 +77,21 @@ export default function ReviewPage() {
         poster: currentUser?.email || "Anonymous",
       });
 
-      setSuccessMsg("Review submitted!");
+      // Clear form FIRST so it doesn’t erase the success message
       clearForm();
+
+      // Now show success alert
+      setSuccessMsg("Review submitted successfully!");
+
+      // Auto-hide after 3s
+      setTimeout(() => {
+        setSuccessMsg("");
+      }, 3000);
 
       // Reload user's reviews
       const updated = await getReviewsByUser(currentUser.uid);
       setMyReviews(updated);
+
     } catch (err) {
       console.error(err);
       setError("Something went wrong while submitting your review.");
@@ -103,7 +112,7 @@ export default function ReviewPage() {
 
   return (
     <div className="page-container">
-      {/* ⭐ FIXED-SIZE FORM CARD */}
+      {/* ⭐ FORM CARD */}
       <div
         style={{
           maxWidth: "600px",
@@ -192,85 +201,25 @@ export default function ReviewPage() {
         </div>
       </div>
 
-      {/* ⭐ YOUR REVIEWS SECTION */}
+      {/* ⭐ USER REVIEWS SECTION */}
       <h2>Your Reviews</h2>
       <hr />
 
-      {successMsg && <Alert variant="success">{successMsg}</Alert>}
-      {error && <Alert variant="danger">{error}</Alert>}
-
-      <h4>Review Type</h4>
-      <ButtonGroup className="mb-3">
-        <ToggleButton
-          id="band-option"
-          type="radio"
-          variant="outline-primary"
-          checked={reviewType === "band"}
-          value="band"
-          onClick={() => setReviewType("band")}
-        >
-          Band
-        </ToggleButton>
-
-        <ToggleButton
-          id="venue-option"
-          type="radio"
-          variant="outline-primary"
-          checked={reviewType === "venue"}
-          value="venue"
-          onClick={() => setReviewType("venue")}
-        >
-          Venue
-        </ToggleButton>
-      </ButtonGroup>
-
-      <Form.Group className="mb-3">
-        <Form.Label htmlFor="typeOfReview">{reviewType === "band" ? "Band Name" : "Venue Name"}</Form.Label>
-        <Form.Control
-          id="typeOfReview"
-          placeholder={`Enter ${reviewType} name`}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </Form.Group>
-
-      <Form.Group className="mb-3">
-        <Form.Label htmlFor="yourReview">Your Review</Form.Label>
-        <Form.Control
-          id="yourReview"
-          as="textarea"
-          rows={4}
-          placeholder="Write your review..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-      </Form.Group>
-
-      <h5>Rating</h5>
-      <div className="mb-3">
-        {[1, 2, 3, 4, 5].map((r) => (
-          <Button
-            type="button"
-            key={r}
-            variant={rating >= r ? "warning" : "outline-secondary"}
-            onClick={() => setRating(r)}
-            style={{ marginRight: "0.3rem" }}
-          >
-            ★
-          </Button>
-        ))}
-      </div>
-
-      <div className="mt-3">
-        <Button type="submit" variant="secondary" onClick={() => {
-          setName(""); setContent(""); setRating(0); setError(""); setSuccessMsg("");
-        }}>
-          Cancel
-        </Button>{" "}
-        <Button type="submit" variant="success" onClick={handleSubmit}>
-          Submit Review
-        </Button>
-      </div>
+      {myReviews.length === 0 ? (
+        <Alert variant="info">You haven't written any reviews yet.</Alert>
+      ) : (
+        <div className="review-grid">
+          {myReviews.map((review) => (
+            <div className="review-card-wrapper" key={review.id}>
+              <ReviewCard
+                {...review}
+                onDelete={() => handleDelete(review.id)}
+                onUpdate={handleUpdate}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

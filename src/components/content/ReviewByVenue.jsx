@@ -126,7 +126,6 @@ export default function ReviewByVenue() {
       <h1>Venue Reviews</h1>
 
       <Button
-        type="button"
         variant="success"
         onClick={() => navigate("/ReviewPage")}
         className="mb-3"
