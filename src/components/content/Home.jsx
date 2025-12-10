@@ -15,21 +15,21 @@ export default function Home() {
 
             <Button type="button" style={{ backgroundColor: "#ffb0b0ff", borderColor: "#520000ff", color: "#520000ff" }}
                 className="btn btn-outline-dark me-4"
-                onClick={() => navigate("/ReviewByBand")}
+                onClick={() => navigate("p14/#/ReviewByBand")}
             >
                 See Reviews by Band
             </Button>
 
             <Button type="button" style={{ backgroundColor: "#ffb0b0ff", borderColor: "#520000ff", color: "#520000ff" }}
                 className="btn btn-outline-dark me-4"
-                onClick={() => navigate("/ReviewByVenue")}
+                onClick={() => navigate("p14/#/ReviewByVenue")}
             >
                 See Reviews by Venue
             </Button>
 
             <Button type="button" style={{ backgroundColor: "#eff6ee", borderColor: "#273043", color: "#273043" }}
                 className="btn btn-success"
-                onClick={() => navigate("/ReviewPage")}
+                onClick={() => navigate("p14/#/ReviewPage")}
             >
                 Write a Review
             </Button>
