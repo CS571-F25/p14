@@ -158,12 +158,12 @@ export default function ReviewByBand() {
           />
 
           {/* Search Button */}
-          <Button variant="primary" onClick={handleSearch}>
+          <Button type="submit" variant="primary" onClick={handleSearch}>
             Search
           </Button>
 
           {/* Clear Button */}
-          <Button variant="secondary" onClick={handleClear}>
+          <Button type="submit" variant="secondary" onClick={handleClear}>
             Clear
           </Button>
 

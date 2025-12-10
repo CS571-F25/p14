@@ -29,8 +29,9 @@ export default function Home() {
 
             <div className="d-grid gap-2 d-md-block">
 
-                <Button
-                    style={{ backgroundColor: "#273043", borderColor: "#FF5733", color: "#FFF" }}
+                <Button 
+                    type="button"
+                    style={{ backgroundColor: "#ffe9e9ff", borderColor: "#7d1f0aff", color: "#7d1f0aff" }}
                     className="btn btn-outline-dark me-4"
                     onClick={() => navigate("/ReviewByBand")}
                 >
@@ -38,7 +39,8 @@ export default function Home() {
                 </Button>
 
                 <Button
-                    style={{ backgroundColor: "#273043", borderColor: "#FF5733", color: "#FFF" }}
+                    type="button"
+                    style={{ backgroundColor: "#ffe9e9ff", borderColor: "#7d1f0aff", color: "#7d1f0aff" }}
                     className="btn btn-outline-dark me-4"
                     onClick={() => navigate("/ReviewByVenue")}
                 >
@@ -46,7 +48,8 @@ export default function Home() {
                 </Button>
 
                 <Button
-                    style={{ backgroundColor: "#273043", borderColor: "#FF5733", color: "#FFF" }}
+                    type="button"
+                    style={{ backgroundColor: "#022062ff", borderColor: "#022062ff", color: "#FFF" }}
                     className="btn btn-success"
                     onClick={() => navigate("/ReviewPage")}
                 >

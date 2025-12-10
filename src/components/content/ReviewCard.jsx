@@ -68,6 +68,7 @@ function ReviewCard(props) {
         {isOwner && (
           <div className="d-flex justify-content-center gap-2">
             <Button
+              type="button"
               variant="primary"
               size="sm"
               onClick={() => setIsEditing(true)}
@@ -75,6 +76,7 @@ function ReviewCard(props) {
               Edit
             </Button>
             <Button
+              type="button"
               variant="danger"
               size="sm"
               onClick={() => props.onDelete(props.id)}
@@ -93,6 +95,7 @@ function ReviewCard(props) {
           <Form.Group className="mb-3">
             <Form.Label>Review</Form.Label>
             <Form.Control
+              id="editReview"
               as="textarea"
               rows={4}
               value={editContent}
@@ -104,6 +107,7 @@ function ReviewCard(props) {
           <div className="mb-3">
             {[1, 2, 3, 4, 5].map((r) => (
               <Button
+                type="button"
                 key={r}
                 variant={editRating >= r ? "warning" : "outline-secondary"}
                 onClick={() => setEditRating(r)}
@@ -115,10 +119,10 @@ function ReviewCard(props) {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setIsEditing(false)}>
+          <Button type="submit" variant="secondary" onClick={() => setIsEditing(false)}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleUpdate}>
+          <Button type="submit" variant="primary" onClick={handleUpdate}>
             Save Changes
           </Button>
         </Modal.Footer>

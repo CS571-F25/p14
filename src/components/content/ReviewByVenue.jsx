@@ -126,6 +126,7 @@ export default function ReviewByVenue() {
       <h1>Venue Reviews</h1>
 
       <Button
+        type="button"
         variant="success"
         onClick={() => navigate("/ReviewPage")}
         className="mb-3"
@@ -137,7 +138,7 @@ export default function ReviewByVenue() {
       <hr />
 
       {/* ⭐ SEARCH FORM */}
-      <Form className="mb-4" onSubmit={(e) => e.preventDefault()}>
+      <Form value="searchFunction" className="mb-4" onSubmit={(e) => e.preventDefault()}>
         <Form.Label>Venue Name</Form.Label>
 
         <div
@@ -151,17 +152,18 @@ export default function ReviewByVenue() {
           }}
         >
           <Form.Control
+            id="searchFunction"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search venues..."
             style={{ maxWidth: "300px" }}
           />
 
-          <Button variant="primary" onClick={handleSearch}>
+          <Button type="submit" variant="primary" onClick={handleSearch}>
             Search
           </Button>
 
-          <Button variant="secondary" onClick={handleClear}>
+          <Button type="button" variant="secondary" onClick={handleClear}>
             Clear
           </Button>
 

@@ -42,7 +42,7 @@ export default function ReviewPage() {
       <div className="page-container" style={{ textAlign: "center" }}>
         <Alert variant="warning">
           <h4>Please log in to write a review</h4>
-          <Button variant="primary" onClick={() => navigate("/UserLogin")}>
+          <Button type="button" variant="primary" onClick={() => navigate("/UserLogin")}>
             Go to Login
           </Button>
         </Alert>
@@ -133,6 +133,7 @@ export default function ReviewPage() {
         {/* Review Type Toggle */}
         <div className="mb-3">
           <Button
+            type="button"
             variant={reviewType === "band" ? "primary" : "outline-primary"}
             onClick={() => setReviewType("band")}
             style={{ marginRight: "0.5rem" }}
@@ -140,6 +141,7 @@ export default function ReviewPage() {
             Band
           </Button>
           <Button
+            type="button"
             variant={reviewType === "venue" ? "primary" : "outline-primary"}
             onClick={() => setReviewType("venue")}
           >
@@ -153,6 +155,7 @@ export default function ReviewPage() {
             {reviewType === "band" ? "Band Name" : "Venue Name"}
           </Form.Label>
           <Form.Control
+            id="reviewName"
             placeholder={`Enter ${reviewType}`}
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -163,6 +166,7 @@ export default function ReviewPage() {
         <Form.Group className="mb-3">
           <Form.Label>Your Review</Form.Label>
           <Form.Control
+            id="reviewBodyArea"
             as="textarea"
             rows={4}
             placeholder="Write your review..."
@@ -176,6 +180,7 @@ export default function ReviewPage() {
         <div className="mb-3">
           {[1, 2, 3, 4, 5].map((r) => (
             <Button
+              type="button"
               key={r}
               variant={rating >= r ? "warning" : "outline-secondary"}
               onClick={() => setRating(r)}
@@ -189,13 +194,14 @@ export default function ReviewPage() {
         {/* Buttons */}
         <div className="mt-3">
           <Button
+            type="button"
             variant="secondary"
             onClick={clearForm}
             style={{ marginRight: "0.5rem" }}
           >
             Cancel
           </Button>
-          <Button variant="success" onClick={handleSubmit}>
+          <Button type="submit" variant="success" onClick={handleSubmit}>
             Submit Review
           </Button>
         </div>
