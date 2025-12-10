@@ -1,8 +1,6 @@
-
 import React, { useState } from "react";
 import { Button, Card, Form, Modal } from "react-bootstrap";
 import { useAuth } from "../auth/AuthContext";
-// Moved the content of MessageCard.jsx here for better ownership verification and easier edits made by post owners!
 
 function ReviewCard(props) {
   const { currentUser } = useAuth();
@@ -18,11 +16,11 @@ function ReviewCard(props) {
   else dt = new Date(created);
 
   // Check if current user owns this review
-  // Legacy reviews (no userUid) fall back to checking email/username
-  const isOwner = currentUser && (
-    props.userUid === currentUser.uid || 
-    (!props.userUid && props.poster === (currentUser.email || currentUser.displayName))
-  );
+  const isOwner =
+    currentUser &&
+    (props.userUid === currentUser.uid ||
+      (!props.userUid &&
+        props.poster === (currentUser.email || currentUser.displayName)));
 
   const handleUpdate = () => {
     if (props.onUpdate) {
@@ -36,6 +34,7 @@ function ReviewCard(props) {
 
   return (
     <>
+
       <Card style={{ margin: "0.5rem", padding: "0.5rem", width: "100%" }}>
         <h1>{props.bandName || props.venueName}</h1>
         <sub>
@@ -43,29 +42,39 @@ function ReviewCard(props) {
         </sub>
         <br />
         <i>{props.poster}</i>
-        
-        {/* Star rating display */}
+
         {props.rating > 0 && (
-          <div style={{ color: "#ffc107", fontSize: "1.2rem" }}>
-            {"★".repeat(props.rating)}{"☆".repeat(5 - props.rating)}
+          <div
+            style={{
+              color: "#ffc107",
+              fontSize: "1.2rem",
+              marginTop: "0.25rem",
+            }}
+          >
+            {"★".repeat(props.rating)}
+            {"☆".repeat(5 - props.rating)}
           </div>
         )}
-        
-        <p>{props.content}</p>
-        
+
+        <p style={{ marginTop: "0.5rem" }}>{props.content}</p>
+
         {isOwner && (
+
           <div className="d-flex gap-2">
             <Button 
               type="button"
               variant="primary" 
+
               size="sm"
               onClick={() => setIsEditing(true)}
             >
               Edit
             </Button>
+
             <Button 
               type="button"
               variant="danger" 
+
               size="sm"
               onClick={() => props.onDelete(props.id)}
             >
@@ -75,7 +84,6 @@ function ReviewCard(props) {
         )}
       </Card>
 
-      {/* Edit Modal */}
       <Modal show={isEditing} onHide={() => setIsEditing(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Review</Modal.Title>
@@ -91,7 +99,7 @@ function ReviewCard(props) {
               onChange={(e) => setEditContent(e.target.value)}
             />
           </Form.Group>
-          
+
           <Form.Label>Rating</Form.Label>
           <div className="mb-3">
             {[1, 2, 3, 4, 5].map((r) => (

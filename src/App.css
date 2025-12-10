@@ -40,3 +40,21 @@
 .read-the-docs {
   color: #888;
 }
+
+.page-container {
+  padding-top: 6rem;
+}
+
+.review-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  padding: 20px 0;
+}
+
+.review-card-wrapper {
+  width: 300px;
+  display: flex;
+  justify-content: center;
+}

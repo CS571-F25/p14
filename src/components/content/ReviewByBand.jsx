@@ -1,69 +1,127 @@
 import React, { useState, useEffect } from "react";
-import { Button, Container, Form, Row, Col } from "react-bootstrap";
-import Pagination from "react-bootstrap/Pagination";
+import { Button, Form, Pagination } from "react-bootstrap";
 import ReviewCard from "./ReviewCard";
 import { useNavigate } from "react-router-dom";
 
-import {
-  getRecentReviews,
-  getReviewsForBand,
-  deleteReview,
-} from "../../firebase/firebaseHelper";
+import { getRecentReviews, deleteReview } from "../../firebase/firebaseHelper";
 
 export default function ReviewByBand() {
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchPerformed, setSearchPerformed] = useState(false);
+
+  const [averageRating, setAverageRating] = useState(null);
+  const [sortOption, setSortOption] = useState("newest");
+
+  const [allReviews, setAllReviews] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [avgRating, setAvgRating] = useState(null);
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 10;
+  const postsPerPage = 12;
 
-  // Load 10 most recent on mount
+  // Load all band reviews once
   useEffect(() => {
     async function load() {
-      const recent = await getRecentReviews(10);
-      // filter for band reviews (documents that have bandName)
-      setReviews(recent.filter((r) => r.bandName));
+      const recent = await getRecentReviews(300);
+      const bandOnly = recent.filter((r) => r.bandName);
+      const sorted = applySort(bandOnly);
+      setAllReviews(sorted);
+      setReviews(sorted);
     }
     load();
-  }, []);
+  }, [sortOption]);
 
-  // Handle searching for band
-  const handleSearch = async () => {
-    if (!searchTerm.trim()) return;
+  // ⭐ SORT FUNCTION
+  const applySort = (list) => {
+    let sorted = [...list];
 
-    const results = await getReviewsForBand(searchTerm);
-    setReviews(results);
-
-    // calculate average rating
-    if (results.length > 0) {
-      const avg =
-        results.reduce((acc, r) => acc + (r.rating || 0), 0) / results.length;
-      setAvgRating(avg.toFixed(2));
-    } else {
-      setAvgRating(null);
+    switch (sortOption) {
+      case "newest":
+        sorted.sort((a, b) => b.created - a.created);
+        break;
+      case "oldest":
+        sorted.sort((a, b) => a.created - b.created);
+        break;
+      case "high":
+        sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        break;
+      case "low":
+        sorted.sort((a, b) => (a.rating || 0) - (b.rating || 0));
+        break;
+      case "az":
+        sorted.sort((a, b) =>
+          (a.bandName || "").localeCompare(b.bandName || "")
+        );
+        break;
+      case "za":
+        sorted.sort((a, b) =>
+          (b.bandName || "").localeCompare(a.bandName || "")
+        );
+        break;
+      default:
+        break;
     }
 
+    return sorted;
+  };
+
+  // ⭐ SEARCH BUTTON
+  const handleSearch = () => {
+    setSearchPerformed(true);
+    setAverageRating(null);
+
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) {
+      const sorted = applySort(allReviews);
+      setReviews(sorted);
+      setCurrentPage(1);
+      return;
+    }
+
+    const filtered = allReviews.filter((review) =>
+      review.bandName?.toLowerCase().includes(term)
+    );
+
+    const sorted = applySort(filtered);
+    setReviews(sorted);
+    setCurrentPage(1);
+
+    if (filtered.length > 0) {
+      const avg =
+        filtered.reduce((sum, r) => sum + (r.rating || 0), 0) /
+        filtered.length;
+      setAverageRating(avg);
+    }
+  };
+
+  // ⭐ CLEAR BUTTON
+  const handleClear = () => {
+    setSearchTerm("");
+    const sorted = applySort(allReviews);
+    setReviews(sorted);
+    setSearchPerformed(false);
+    setAverageRating(null);
     setCurrentPage(1);
   };
 
-  // Handle deleting a review
+  // ⭐ DELETE
   const handleDelete = async (id) => {
     await deleteReview(id);
-    setReviews((prev) => prev.filter((r) => r.id !== id));
+    const updated = allReviews.filter((r) => r.id !== id);
+    const sorted = applySort(updated);
+    setAllReviews(sorted);
+    setReviews(sorted);
   };
 
-  // Pagination logic
+  // ⭐ Pagination
   const indexOfLast = currentPage * postsPerPage;
   const indexOfFirst = indexOfLast - postsPerPage;
   const currentReviews = reviews.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(reviews.length / postsPerPage);
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div className="page-container">
       <h1>Band Reviews</h1>
 
       <Button
@@ -75,54 +133,85 @@ export default function ReviewByBand() {
         Write a Review
       </Button>
 
-      <p>Search for bands below!</p>
       <hr />
 
-      {/* Search Input */}
-      <Form>
-        <Form.Label htmlFor="searchBandName">Band name</Form.Label>
-        <Form.Control
-          id="searchBandName"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <br />
-        <Button variant="primary" onClick={handleSearch}>
-          Search
-        </Button>
+      {/* ⭐ SEARCH */}
+      <Form className="mb-4" onSubmit={(e) => e.preventDefault()}>
+        <Form.Label>Band Name</Form.Label>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "10px",
+            alignItems: "center",
+            flexWrap: "wrap",
+            marginTop: "0.5rem"
+          }}
+        >
+          <Form.Control
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search bands..."
+            style={{ maxWidth: "300px" }}
+          />
+
+          <Button variant="primary" onClick={handleSearch}>
+            Search
+          </Button>
+
+          <Button variant="secondary" onClick={handleClear}>
+            Clear
+          </Button>
+
+          <Form.Select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            style={{ maxWidth: "180px" }}
+          >
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="high">Highest Rated</option>
+            <option value="low">Lowest Rated</option>
+            <option value="az">A → Z</option>
+            <option value="za">Z → A</option>
+          </Form.Select>
+        </div>
       </Form>
 
-      {/* Average rating */}
-      {avgRating && (
-        <h3 style={{ marginTop: "1rem" }}>
-          Average Rating for "{searchTerm}": {avgRating}
-        </h3>
+
+      {/* ⭐ AVERAGE RATING */}
+      {searchPerformed && (
+        <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+          {reviews.length === 0 ? (
+            <h5>No results found.</h5>
+          ) : (
+            <h5>
+              Average rating for "{searchTerm}": {" "}
+              {averageRating && (
+                <>
+                  {"★".repeat(Math.round(averageRating))}
+                  {"☆".repeat(5 - Math.round(averageRating))}
+                  {" "}({averageRating.toFixed(1)})
+                </>
+              )}
+            </h5>
+          )}
+        </div>
       )}
 
-      {/* Reviews List */}
-      <Container fluid>
-        <Row>
-          {currentReviews.map((r) => (
-            <Col md={4} key={r.id}>
-              <ReviewCard
-                id={r.id}
-                title={r.title}
-                content={r.content}
-                poster={r.poster}
-                created={r.created}
-                rating={r.rating}
-                userUid={r.userUid}
-                bandName = {r.bandName}
-                onDelete={() => handleDelete(r.id)}
-              />
-            </Col>
-          ))}
-        </Row>
-      </Container>
+      {/* ⭐ CARD GRID */}
+      <div className="review-grid">
+        {currentReviews.map((review) => (
+          <div className="review-card-wrapper" key={review.id}>
+            <ReviewCard {...review} onDelete={() => handleDelete(review.id)} />
+          </div>
+        ))}
+      </div>
 
-      {/* Pagination */}
+      {/* ⭐ PAGINATION */}
       {totalPages > 1 && (
-        <Pagination className="mt-3">
+        <Pagination className="justify-content-center mt-4">
           {[...Array(totalPages)].map((_, i) => (
             <Pagination.Item
               key={i + 1}
