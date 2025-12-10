@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form, ToggleButton, ButtonGroup, Alert } from "react-bootstrap";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { addReview } from "../../firebase/firebaseHelper";
 import { useAuth } from "../auth/AuthContext";
 

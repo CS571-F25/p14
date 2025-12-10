@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Form, Button, Alert, Container, Card } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router-dom';
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../../firebase/auth';
 import { useAuth } from './AuthContext';
 

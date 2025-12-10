@@ -1,5 +1,5 @@
 import './App.css'
-import { BrowserRouter, HashRouter, Route, Routes } from 'react-router'
+import { Route, Routes } from 'react-router-dom'
 import Home from './components/content/Home'
 import ReviewPage from './components/content/ReviewPage'
 import ReviewByBand from './components/content/ReviewByBand'
@@ -13,7 +13,6 @@ import { AuthProvider } from './components/auth/AuthContext'
 function App() {
   return (
     <AuthProvider>
-      <HashRouter>
         <NaviBar />
 
         <Routes>
@@ -24,9 +23,8 @@ function App() {
           <Route path="/UserLogin" element={<UserLogin/>}></Route>
           <Route path="/UserRegister" element={<UserRegister/>}></Route>
           <Route path="/UserProfile" element={<UserProfile/>}></Route>
-          
-        </Routes>
-      </HashRouter>
+
+        </Routes>  
     </AuthProvider>
   )
 }

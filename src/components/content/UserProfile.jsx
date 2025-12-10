@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Alert, Spinner, Row, Col, Card } from "react-bootstrap";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { getReviewsByUser, deleteReview, updateReview } from "../../firebase/firebaseHelper";
 import ReviewCard from "./ReviewCard";
