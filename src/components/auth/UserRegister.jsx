@@ -4,18 +4,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { doCreateUserWithEmailAndPassword, doSignInWithGoogle } from '../../firebase/auth';
 import { useAuth } from './AuthContext';
 
-/* TODO
-- username input
-- password input
-- password conf input
-- submit button + redirect to homepage (and logs them in)
-- login button on nav bar should change to a logout button
-*/
-
 export default function UserRegister() {
   const navigate = useNavigate();
   const { userLoggedIn } = useAuth();
 
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,8 +26,13 @@ export default function UserRegister() {
     setErrorMessage("");
 
     // Validation
-    if (!email || !password || !confirmPassword) {
+    if (!username || !email || !password || !confirmPassword) {
       setErrorMessage("Please fill out all fields.");
+      return;
+    }
+
+    if (username.length < 3) {
+      setErrorMessage("Username must be at least 3 characters long.");
       return;
     }
 
@@ -51,7 +49,7 @@ export default function UserRegister() {
     if (!isRegistering) {
       setIsRegistering(true);
       try {
-        await doCreateUserWithEmailAndPassword(email, password);
+        await doCreateUserWithEmailAndPassword(email, password, username);
         navigate("/");
       } catch (error) {
         console.error(error);
@@ -95,6 +93,18 @@ export default function UserRegister() {
         {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
 
         <Form onSubmit={handleRegister}>
+          <Form.Group className="mb-3">
+            <Form.Label htmlFor="usernameInput">Username:</Form.Label>
+            <Form.Control
+              id="usernameInput"
+              type="text"
+              placeholder="Choose a username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={isRegistering}
+            />
+          </Form.Group>
+
           <Form.Group className="mb-3">
             <Form.Label htmlFor="emailInput">Email:</Form.Label>
             <Form.Control

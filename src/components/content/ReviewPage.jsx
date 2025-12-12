@@ -61,12 +61,12 @@ export default function ReviewPage() {
   const handleSubmit = async () => {
     setError("");
     setSuccessMsg("");
-
+  
     if (!name.trim() || !content.trim() || rating === 0) {
       setError("Please fill out all fields and choose a rating.");
       return;
     }
-
+  
     try {
       await addReview({
         bandName: reviewType === "band" ? name : null,
@@ -74,24 +74,19 @@ export default function ReviewPage() {
         title: `${reviewType === "band" ? "Band" : "Venue"} Review`,
         content,
         rating,
-        poster: currentUser?.email || "Anonymous",
+        poster: currentUser?.displayName || "Anonymous", // Use username
       });
-
-      // Clear form FIRST so it doesn’t erase the success message
+  
       clearForm();
-
-      // Now show success alert
       setSuccessMsg("Review submitted successfully!");
-
-      // Auto-hide after 3s
+  
       setTimeout(() => {
         setSuccessMsg("");
       }, 3000);
-
-      // Reload user's reviews
+  
       const updated = await getReviewsByUser(currentUser.uid);
       setMyReviews(updated);
-
+  
     } catch (err) {
       console.error(err);
       setError("Something went wrong while submitting your review.");

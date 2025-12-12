@@ -29,6 +29,9 @@ export async function addReview({
 }) {
   const currentUser = auth.currentUser;
 
+  // Use displayName (username) instead of email
+  const displayPoster = currentUser?.displayName || poster;
+
   const docRef = await addDoc(collection(db, "reviews"), {
     bandName,
     bandNameLower: bandName ? bandName.trim().toLowerCase() : null,
@@ -39,7 +42,7 @@ export async function addReview({
     title,
     content,
     rating,
-    poster,
+    poster: displayPoster, // Store username instead of email
 
     userUid: currentUser?.uid || null,
     created: serverTimestamp(),
@@ -65,6 +68,8 @@ export async function getRecentReviews(limitCount = 10) {
     };
   });
 }
+
+
 
 export async function getReviewsForBand(bandName) {
   const formatted = bandName.trim().toLowerCase();

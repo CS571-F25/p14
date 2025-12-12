@@ -34,58 +34,60 @@ function ReviewCard(props) {
 
   return (
     <>
-      <Card
-        className="shadow-sm h-100"
-        style={{
-          margin: "0.5rem 0",
-          padding: "0.75rem",
-          width: "100%",          // fill the bootstrap column
-          textAlign: "center",
-        }}
+    <Card
+      className="shadow-sm h-100"
+      style={{
+      margin: "0.5rem 0",
+      padding: "0.75rem",
+      width: "100%",
+      textAlign: "center",
+  }}
+>
+    <h1 style={{ marginBottom: "0.5rem" }}>{props.bandName || props.venueName}</h1>
+   <sub>
+       Posted on {dt.toLocaleDateString()} at {dt.toLocaleTimeString()}
+   </sub>
+    <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
+      <i>{props.poster}</i>
+  </div>
+
+  {props.rating > 0 && (
+    <div
+      style={{
+        color: "#ffc107",
+        fontSize: "1.2rem",
+        marginTop: "0.25rem",
+        marginBottom: "0.5rem",
+      }}
+    >
+      {"★".repeat(props.rating)}
+      {"☆".repeat(5 - props.rating)}
+    </div>
+  )}
+
+  <p style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>{props.content}</p>
+
+  {isOwner && (
+    <div className="d-flex justify-content-center gap-2" style={{ marginTop: "1rem" }}>
+      <Button
+        type="button"
+        variant="primary"
+        size="sm"
+        onClick={() => setIsEditing(true)}
       >
-        <h1>{props.bandName || props.venueName}</h1>
-        <sub>
-          Posted on {dt.toLocaleDateString()} at {dt.toLocaleTimeString()}
-        </sub>
-        <br />
-        <i>{props.poster}</i>
-
-        {props.rating > 0 && (
-          <div
-            style={{
-              color: "#ffc107",
-              fontSize: "1.2rem",
-              marginTop: "0.25rem",
-            }}
-          >
-            {"★".repeat(props.rating)}
-            {"☆".repeat(5 - props.rating)}
-          </div>
-        )}
-
-        <p style={{ marginTop: "0.5rem" }}>{props.content}</p>
-
-        {isOwner && (
-          <div className="d-flex justify-content-center gap-2">
-            <Button
-              type="button"
-              variant="primary"
-              size="sm"
-              onClick={() => setIsEditing(true)}
-            >
-              Edit
-            </Button>
-            <Button
-              type="button"
-              variant="danger"
-              size="sm"
-              onClick={() => props.onDelete(props.id)}
-            >
-              Delete
-            </Button>
-          </div>
-        )}
-      </Card>
+        Edit
+      </Button>
+      <Button
+        type="button"
+        variant="danger"
+        size="sm"
+        onClick={() => props.onDelete(props.id)}
+      >
+        Delete
+      </Button>
+    </div>
+  )}
+</Card>
 
       <Modal show={isEditing} onHide={() => setIsEditing(false)}>
         <Modal.Header closeButton>
