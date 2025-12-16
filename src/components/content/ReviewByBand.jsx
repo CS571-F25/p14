@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button, Form, Pagination } from "react-bootstrap";
 import ReviewCard from "./ReviewCard";
 import { useNavigate } from "react-router-dom";
@@ -20,51 +20,57 @@ export default function ReviewByBand() {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 12;
 
-  // Load all band reviews once
-  useEffect(() => {
-    async function load() {
-      const recent = await getRecentReviews(300);
-      const bandOnly = recent.filter((r) => r.bandName);
-      const sorted = applySort(bandOnly);
-      setAllReviews(sorted);
-      setReviews(sorted);
-    }
-    load();
-  }, [sortOption]);
+// Load all band reviews once
+useEffect(() => {
+  async function load() {
+    const recent = await getRecentReviews(300);
+    const bandOnly = recent.filter((r) => r.bandName);
+    setAllReviews(bandOnly);
+    setReviews(bandOnly);
+  }
+  load();
+}, []); 
 
-  // ⭐ SORT FUNCTION
-  const applySort = (list) => {
-    let sorted = [...list];
+useEffect(() => {
+  const sorted = applySort(allReviews);
+  setReviews(sorted);
+}, [sortOption, allReviews]); // Add both dependencies as I had to memoize some shit bc of the function i was getting. 
 
-    switch (sortOption) {
-      case "newest":
-        sorted.sort((a, b) => b.created - a.created);
-        break;
-      case "oldest":
-        sorted.sort((a, b) => a.created - b.created);
-        break;
-      case "high":
-        sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-        break;
-      case "low":
-        sorted.sort((a, b) => (a.rating || 0) - (b.rating || 0));
-        break;
-      case "az":
-        sorted.sort((a, b) =>
-          (a.bandName || "").localeCompare(b.bandName || "")
-        );
-        break;
-      case "za":
-        sorted.sort((a, b) =>
-          (b.bandName || "").localeCompare(a.bandName || "")
-        );
-        break;
-      default:
-        break;
-    }
+  // ⭐ SORT FUNCTION - wrap with useCallback
+const applySort = useCallback((list) => {
+  let sorted = [...list];
 
-    return sorted;
-  };
+  switch (sortOption) {
+    case "newest":
+      sorted.sort((a, b) => b.created - a.created);
+      break;
+    case "oldest":
+      sorted.sort((a, b) => a.created - b.created);
+      break;
+    case "high":
+      sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      break;
+    case "low":
+      sorted.sort((a, b) => (a.rating || 0) - (b.rating || 0));
+      break;
+    case "az":
+      // For Band: use bandName, For Venue: use venueName
+      sorted.sort((a, b) =>
+        (a.bandName || "").localeCompare(b.bandName || "")
+      );
+      break;
+    case "za":
+      // For Band: use bandName, For Venue: use venueName
+      sorted.sort((a, b) =>
+        (b.bandName || "").localeCompare(a.bandName || "")
+      );
+      break;
+    default:
+      break;
+  }
+
+  return sorted;
+}, [sortOption]); // applySort only changes when sortOption changes
 
   // ⭐ SEARCH BUTTON
   const handleSearch = () => {
